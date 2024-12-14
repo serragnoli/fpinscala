@@ -139,7 +139,8 @@ object PolymorphicFunctions:
     if (as.length <= 1) {
       true
     } else {
-      val adjacentEqualOrInOrder: Array[A] => Boolean = a => a(0) == a(1) || gt(a(1), a(0))
+      val adjacentEqualOrInOrder: Array[A] => Boolean = a =>
+        a(0) == a(1) || gt(a(1), a(0))
       as.sliding(2).forall(adjacentEqualOrInOrder)
     }
   }
@@ -154,8 +155,10 @@ object PolymorphicFunctions:
 
   // Note that `=>` associates to the right, so we could
   // write the return type as `A => B => C`
-  def curry[A, B, C](f: (A, B) => C): A => (B => C) =
-    ???
+  def curry[A, B, C](f: (A, B) => C): A => (B => C) = {
+    // (a: A) => f(a, _) // FS: My original answer. But below is better as no partial application is needed.
+    a => (b => f(a, b))
+  }
 
   // NB: The `Function2` trait has a `curried` method already
 
