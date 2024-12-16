@@ -4,6 +4,7 @@ package fpinscala.exercises.datastructures
 enum List[+A]:
   /** A `List` data constructor representing the empty list. */
   case Nil
+
   /** Another data constructor, representing nonempty lists. Note that `tail` is another `List[A]`,
     * which may be `Nil` or another `Cons`.
     */
@@ -98,11 +99,11 @@ object List: // `List` companion object. Contains functions for creating and wor
   def length[A](l: List[A]): Int = foldRight(l, 0, (a, b) => b + 1)
 
   def foldLeft[A, B](l: List[A], acc: B, f: (B, A) => B): B = l match {
-    case Nil => acc
+    case Nil              => acc
     case Cons(head, tail) => foldLeft(tail, f(acc, head), f)
   }
 
-  def sumViaFoldLeft(ns: List[Int]): Int = foldLeft(ns,0, (acc, n) => acc + n)
+  def sumViaFoldLeft(ns: List[Int]): Int = foldLeft(ns, 0, (acc, n) => acc + n)
 
   def productViaFoldLeft(ns: List[Double]): Double = foldLeft(ns, 1.0, (acc, n) => acc * n)
 
@@ -110,7 +111,8 @@ object List: // `List` companion object. Contains functions for creating and wor
 
   def reverse[A](l: List[A]): List[A] = foldLeft(l, Nil: List[A], (acc, i) => Cons(i, acc))
 
-  def appendViaFoldRight[A](l: List[A], r: List[A]): List[A] = ???
+  def appendViaFoldRight[A](l: List[A], r: List[A]): List[A] =
+    foldRight(l, r, (i, acc) => Cons(i, acc))
 
   def concat[A](l: List[List[A]]): List[A] = ???
 
