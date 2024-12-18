@@ -18,17 +18,20 @@ enum Tree[+A]:
   }
 
   def map[B](f: A => B): Tree[B] = this match {
-    case Leaf(value) => Leaf(f(value))
+    case Leaf(value)         => Leaf(f(value))
     case Branch(left, right) => Branch(left.map(f), right.map(f))
   }
 
-  def fold[B](f: A => B, g: (B, B) => B): B = ???
+  def fold[B](f: A => B, g: (B, B) => B): B = this match {
+    case Leaf(value)         => f(value)
+    case Branch(left, right) => g(left.fold(f, g), right.fold(f, g))
+  }
 
-  def sizeViaFold: Int = ???
+  def sizeViaFold: Int = this.fold(_ => 1, (l, r) => 1 + l + r)
 
-  def depthViaFold: Int = ???
+  def depthViaFold: Int = this.fold(_ => 0, (l, r) => 1 + (l max r))
 
-  def mapViaFold[B](f: A => B): Tree[B] = ???
+  def mapViaFold[B](f: A => B): Tree[B] = this.fold(a => Leaf(f(a)), Branch(_, _))
 
 object Tree:
 
