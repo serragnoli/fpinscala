@@ -141,13 +141,23 @@ object List: // `List` companion object. Contains functions for creating and wor
     case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, addPairwise(t1, t2))
   }
 
-  // def zipWith - TODO determine signature
+  def zipWith(l1: List[Int], l2: List[Int], f: (Int, Int) => Int): List[Int] = {
+    def doZip(listSource1: List[Int], listSource2: List[Int], targetList: List[Int]): List[Int] = {
+      (listSource1, listSource2) match {
+        case (Nil, _)                     => targetList
+        case (_, Nil)                     => targetList
+        case (Cons(h1, t1), Cons(h2, t2)) => doZip(t1, t2, Cons(f(h1, h2), targetList))
+      }
+    }
+
+    reverse(doZip(l1, l2, Nil: List[Int]))
+  }
 
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
     def checkSubSequence(acc: Boolean, longer: List[A], shorter: List[A]): Boolean = {
       (longer, shorter) match {
+        case (Nil, Cons(_, _))                          => false
         case (_, Nil)                                   => acc
-        case (Nil, _)                                   => acc
         case (Cons(h1, t1), Cons(h2, t2)) if (h1 == h2) => checkSubSequence(acc && true, t1, t2)
         case (Cons(h1, t1), Cons(h2, t2)) if (h1 != h2) => checkSubSequence(acc, t1, shorter)
         case _                                          => false
@@ -155,5 +165,4 @@ object List: // `List` companion object. Contains functions for creating and wor
     }
 
     checkSubSequence(true, sup, sub)
-
   }
