@@ -136,11 +136,24 @@ object List: // `List` companion object. Contains functions for creating and wor
     flatMap(as, a => if f(a) then List(a) else Nil)
 
   def addPairwise(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
-    case (_, Nil)            => Nil
-    case (Nil, _)            => Nil
+    case (_, Nil)                     => Nil
+    case (Nil, _)                     => Nil
     case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, addPairwise(t1, t2))
   }
 
   // def zipWith - TODO determine signature
 
-  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = ???
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    def checkSubSequence(acc: Boolean, longer: List[A], shorter: List[A]): Boolean = {
+      (longer, shorter) match {
+        case (_, Nil)                                   => acc
+        case (Nil, _)                                   => acc
+        case (Cons(h1, t1), Cons(h2, t2)) if (h1 == h2) => checkSubSequence(acc && true, t1, t2)
+        case (Cons(h1, t1), Cons(h2, t2)) if (h1 != h2) => checkSubSequence(acc, t1, shorter)
+        case _                                          => false
+      }
+    }
+
+    checkSubSequence(true, sup, sub)
+
+  }
