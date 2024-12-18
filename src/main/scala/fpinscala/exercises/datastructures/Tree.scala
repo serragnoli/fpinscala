@@ -39,7 +39,12 @@ object Tree:
     case Leaf(_)      => 1
     case Branch(l, r) => 1 + size(l) + size(r)
 
-  extension (t: Tree[Int]) def firstPositive: Int = ???
+  extension (t: Tree[Int])
+    def firstPositive: Int = t match
+      case Leaf(value) => value
+      case Branch(left, right) =>
+        val leftVal = left.firstPositive
+        if (leftVal > 0) leftVal else right.firstPositive
 
   extension (t: Tree[Int])
     def maximum: Int = t match {
@@ -51,4 +56,5 @@ object Tree:
       }
     }
 
-  extension (t: Tree[Int]) def maximumViaFold: Int = ???
+  extension (t: Tree[Int])
+    def maximumViaFold: Int = t.fold[Int](v => v, (l, r) => l max r)
